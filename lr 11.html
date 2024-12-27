@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор вычитания</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #E8F0F2;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #007BFF;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            width: 100px;
+            margin: 10px;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+        }
+
+        input[type="number"].error {
+            border-color: red;
+            background-color: #FFCCCB;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        #error-message {
+            color: red;
+            font-size: 14px;
+        }
+
+        #fun-message {
+            display: none;
+            margin-top: 20px;
+            font-size: 24px;
+            color: #FF5722;
+        }
+
+        #sad-image {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Калькулятор вычитания чисел</h1>
+    <div>
+        <input type="number" id="num1" placeholder="Число 1">
+        <input type="number" id="num2" placeholder="Число 2">
+        <button id="subtractBtn">Вычесть</button>
+    </div>
+    <div id="result"></div>
+    <div id="error-message"></div>
+    <div id="fun-message">Пора делать перерыв! :)</div>
+    <img id="sad-image" src="image.jpg" alt="Веселое сообщение" width="300">
+
+    <script>
+        const calculatorData = {
+            num1: null,
+            num2: null
+        };
+
+        document.getElementById('subtractBtn').addEventListener('click', calculate);
+        document.addEventListener('keydown', (event) => {
+            if (event.ctrlKey && event.code === 'Enter') {
+                calculate();
+            }
+        });
+
+        function calculate() {
+            const num1Input = document.getElementById('num1');
+            const num2Input = document.getElementById('num2');
+            const errorMessage = document.getElementById('error-message');
+            const resultDiv = document.getElementById('result');
+
+            errorMessage.textContent = '';  
+            resultDiv.textContent = '';      
+
+            calculatorData.num1 = parseFloat(num1Input.value);
+            calculatorData.num2 = parseFloat(num2Input.value);
+            
+            // Валидация
+            if (isNaN(calculatorData.num1) || isNaN(calculatorData.num2)) {
+                if (isNaN(calculatorData.num1)) {
+                    num1Input.classList.add('error');
+                } else {
+                    num1Input.classList.remove('error');
+                }
+                if (isNaN(calculatorData.num2)) {
+                    num2Input.classList.add('error');
+                } else {
+                    num2Input.classList.remove('error');
+                }
+                errorMessage.textContent = 'Введите корректные числовые значения!';
+                return;
+            }
+
+            num1Input.classList.remove('error');
+            num2Input.classList.remove('error');
+
+            const result = calculatorData.num1 - calculatorData.num2;
+            resultDiv.textContent = `Результат: ${result}`;
+        }
+
+        let timer;
+        function resetTimer() {
+            clearTimeout(timer);
+            document.getElementById('fun-message').style.display = 'none';
+            document.getElementById('sad-image').style.display = 'none';
+
+            timer = setTimeout(() => {
+                document.getElementById('fun-message').style.display = 'block';
+                document.getElementById('sad-image').style.display = 'block'; // Показываем картинку
+            }, 60000); // 1 минута
+        }
+
+        document.addEventListener('mousemove', resetTimer);
+        document.addEventListener('keypress', resetTimer);
+        resetTimer();
+    </script>
+</body>
+</html>
